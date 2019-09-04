@@ -18,9 +18,8 @@ instance.interceptors.request.use(function (config) {
 // Add a response interceptor
 instance.interceptors.response.use(function (response) {
   // Do something with response data
-  // return response.data.data || response.data
-  console.log(response, 'request')
-  return response
+  return response.data.data || response.data
+  // console.log(response, 'request')
 }, function (error) {
   // Do something with response error
   return Promise.reject(error)

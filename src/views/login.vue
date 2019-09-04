@@ -13,22 +13,28 @@
 
 <script>
 import { login } from '@/api/user'
+import Vue from 'vue'
+import { Toast } from 'vant'
+Vue.use(Toast)
 export default {
   data () {
     return {
       user: {
-        mobile: '',
-        code: ''
+        mobile: '13911111111',
+        code: '246810'
       }
     }
   },
   methods: {
     async handleLogin () {
       try {
-        let res = await login(this.user)
-        console.log(res, 'login')
+        let data = await login(this.user)
+        console.log(data, 'login')
+        console.log(this)
+        this.$router.push('/')
+        this.$toast.success('登录成功')
       } catch (error) {
-        console.log(error)
+        this.$toast.fail('登录失败')
       }
     }
   }
