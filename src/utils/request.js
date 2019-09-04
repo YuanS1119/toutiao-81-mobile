@@ -8,7 +8,7 @@ const instance = axios.create({
 // Add a request interceptor
 instance.interceptors.request.use(function (config) {
   // Do something before request is sent
-  console.log(config)
+  console.log(config, 'request+请求')
   return config
 }, function (error) {
   // Do something with request error
@@ -18,6 +18,8 @@ instance.interceptors.request.use(function (config) {
 // Add a response interceptor
 instance.interceptors.response.use(function (response) {
   // Do something with response data
+  // return response.data.data || response.data
+  console.log(response, 'request')
   return response
 }, function (error) {
   // Do something with response error
