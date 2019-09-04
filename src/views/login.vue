@@ -13,6 +13,7 @@
 
 <script>
 import { login } from '@/api/user'
+import { mapMutations } from 'vuex'
 // import Vue from 'vue'
 // import { Toast } from 'vant'
 // Vue.use(Toast)
@@ -26,13 +27,12 @@ export default {
     }
   },
   methods: {
+    ...mapMutations(['setUser']),
     async handleLogin () {
       try {
         let data = await login(this.user)
-        // console.log(data, 'login')
-        // console.log(data, 'login打印')
-        // console.log(this)
-        this.$store.commit('setUser', data)
+        // this.$store.commit('setUser', data)
+        this.setUser(data)
         this.$router.push('/')
         this.$toast.success('登录成功')
       } catch (error) {
