@@ -11,19 +11,18 @@
         left-icon="phone-o"
         placeholder="请输入手机号"
       />
-      <van-field
-      v-validate="'required|digits:6'"
-      name="code"
-      clearable
-      :error-message="errors.first('code')"
-      v-model="user.code"
-      left-icon="bag-o"
-      placeholder="请输入验证码">
-      <van-button slot="button" type="default" size="small">发送验证码</van-button>      
+        <van-field
+        v-validate="'required|digits:6'"
+        name="code"
+        :error-message="errors.first('code')"
+        v-model="user.code"
+        left-icon="star-o"
+        placeholder="请输入验证码">
+        <van-button slot="button" type="default" size="small">获取验证码</van-button>
       </van-field>
     </van-cell-group>
     <div class="login_btn">
-      <van-button type="info" @click="handleLogin">登录</van-button>
+      <van-button type="info" @click="handleLogin" loading loading-type="spinner" loading-text="加载中..." >登录</van-button>
     </div>
   </div>
 </template>
@@ -63,19 +62,19 @@ export default {
   },
   created () {
     const dict = {
-    custom: {
-    mobile: {
-      required: '请输入手机号码',
-      digits:'手机号必须是11位的数字'
-    },
-    code: {
-      required: () => '请输入验证码',
-      digits:'验证码必须是6位的数字'
+      custom: {
+        mobile: {
+          required: '请输入手机号码',
+          digits: '手机号必须是11位的数字'
+        },
+        code: {
+          required: () => '请输入验证码',
+          digits: '验证码必须是6位的数字'
+        }
+      }
     }
-  }
-};
-// or use the instance method
-this.$validator.localize('custom', dict);
+    // or use the instance method
+    this.$validator.localize('custom', dict)
   }
 }
 </script>
