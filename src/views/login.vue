@@ -47,7 +47,7 @@ export default {
     ...mapMutations(['setUser']),
     async handleLogin () {
       try {
-         this.$validator.validate().then(async valid => {
+        const valid = await this.$validator.validate()
         if (!valid) {
           // do stuff if not valid.
           return
@@ -56,7 +56,6 @@ export default {
         this.setUser(data)
         this.$router.push('/')
         this.$toast.success('登录成功')
-      })
       } catch (error) {
         this.$toast.fail('登录失败')
       }
