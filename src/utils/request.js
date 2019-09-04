@@ -23,7 +23,7 @@ instance.interceptors.response.use(function (response) {
   // Do something with response error
   return Promise.reject(error)
 })
-
+// 大数据处理
 instance.defaults.transformResponse = [function (data) {
   try {
     // data 数据可能不是标准的 JSON 格式字符串，否则会导致 JSONbig.parse(data) 转换失败报错
