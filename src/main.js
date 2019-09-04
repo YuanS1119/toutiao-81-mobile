@@ -8,9 +8,10 @@ import './style/index.less'
 
 Vue.use(Vant)
 Vue.config.productionTip = false
-
+// const vm =
 new Vue({
   router,
   store,
   render: h => h(App)
 }).$mount('#app')
+// console.log(vm.$toast)
