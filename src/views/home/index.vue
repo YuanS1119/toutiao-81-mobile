@@ -43,7 +43,18 @@ export default {
 </script>
 
 <style lang='less' scoped>
-  .van-tabs /deep/ .van-tabs__content {
-    margin: 46px 0 50px;
+  // .van-tabs /deep/ .van-tabs__content {
+  //   margin: 46px 0 50px;
+  // }
+  .van-tabs{
+    /deep/ .van-tabs__warp{
+      position: fixed;
+      left: 0;
+      top: 46px;
+      z-index: 100;
+    }
+    /deep/ .van-tabs__content{
+       margin: 46px 0 50px;
+    }
   }
 </style>
