@@ -1,5 +1,6 @@
 import axios from 'axios'
 import JSONbig from 'json-bigint'
+import store from '@/store'
 const instance = axios.create({
   timeout: 3000,
   baseURL: 'http://ttapi.research.itcast.cn'
@@ -9,6 +10,9 @@ const instance = axios.create({
 instance.interceptors.request.use(function (config) {
   // Do something before request is sent
   // console.log(config, 'request+请求')
+  if (store.state.user) {
+    config.headers.Authorization = `Bearer ${store.state.user.token}`
+  }
   return config
 }, function (error) {
   // Do something with request error
