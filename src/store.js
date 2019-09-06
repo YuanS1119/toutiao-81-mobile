@@ -12,7 +12,7 @@ export default new Vuex.Store({
     setUser (state, user) {
       // console.log(state, user, 'store打印')
       state.user = user
-      storageTools.getItem('user', user)
+      storageTools.setItem('user', user)
     }
   },
   actions: {

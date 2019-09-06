@@ -1,60 +1,73 @@
 <template>
   <div>
     <router-view></router-view>
-    <van-nav-bar title="黑马头条" left-arrow fixed />
-    <van-tabs animated>
-      <van-tab v-for="index in 8" :title="'标签 ' + index" :key="index">
-        <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
-          <van-cell v-for="item in list" :key="item" :title="item" />
-        </van-list>
+    <van-nav-bar title="黑马头条" fixed />
+    <van-tabs animated v-model="activeIndex">
+      <van-tab v-for="channel in channelsList" :key="channel.id" :title="channel.name"  >
+        <!-- <van-list v-model="loading" :finished="finished" finished-text="没有更多了" >
+          <van-cell v-for="article in artTitleList" :title="article.title" :key="article.art_id.toString()" />
+        </van-list> -->
       </van-tab>
     </van-tabs>
   </div>
 </template>
 
 <script>
+import { getChannels } from '@/api/channels'
+import { getArticlesTitle } from '@/api/articles'
 export default {
   data () {
     return {
-      list: [],
+      // 获取频道列表
+      channelsList: [],
+      // 文章标题列表
+      artTitleList: [],
       loading: false,
-      finished: false
+      finished: false,
+      activeIndex: 0
     }
   },
 
   methods: {
-    onLoad () {
-      // 异步更新数据
-      setTimeout(() => {
-        for (let i = 0; i < 10; i++) {
-          this.list.push(this.list.length + 1)
-        }
-        // 加载状态结束
-        this.loading = false
-
-        // 数据全部加载完成
-        if (this.list.length >= 40) {
-          this.finished = true
-        }
-      }, 500)
+    // 获取频道
+    async getChannelList () {
+      try {
+        let res = await getChannels()
+        this.channelsList = res.channels
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    // 获取文章标题列表
+    async getArticles () {
+      try {
+        let res = await getArticlesTitle()
+        this.artTitleList = res.results
+      } catch (error) {
+        console.log(error)
+      }
     }
+  },
+  created () {
+    this.getChannelList()
+    // this.getArticles()
   }
 }
 </script>
 
 <style lang='less' scoped>
-  // .van-tabs /deep/ .van-tabs__content {
-  //   margin: 46px 0 50px;
-  // }
-  .van-tabs{
-    /deep/ .van-tabs__warp{
-      position: fixed;
-      left: 0;
-      top: 46px;
-      z-index: 100;
-    }
-    /deep/ .van-tabs__content{
-       margin: 46px 0 50px;
-    }
+  .van-tabs {
+  /deep/ .van-tabs__wrap {
+    position: fixed;
+    top: 46px;
+    left: 0;
+    right: 10px;
+    z-index: 100;
   }
+  /deep/ .van-tabs__content {
+    margin-top: 90px;
+    margin-bottom: 50px;
+  }
+  }
+
 </style>

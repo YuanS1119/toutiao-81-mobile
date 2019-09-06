@@ -22,7 +22,7 @@
       </van-field>
     </van-cell-group>
     <div class="login_btn">
-      <van-button type="info" @click="handleLogin" loading loading-type="spinner" loading-text="加载中..." >登录</van-button>
+      <van-button type="info" @click="handleLogin" :loading="locading" loading-type="spinner" loading-text="登录中..." >登录</van-button>
     </div>
   </div>
 </template>
@@ -39,16 +39,18 @@ export default {
       user: {
         mobile: '13911111111',
         code: '246810'
-      }
+      },
+      locading: false
     }
   },
   methods: {
     ...mapMutations(['setUser']),
     async handleLogin () {
+      this.locading = true
       try {
         const valid = await this.$validator.validate()
         if (!valid) {
-          // do stuff if not valid.
+          this.locading = false
           return
         }
         let data = await login(this.user)

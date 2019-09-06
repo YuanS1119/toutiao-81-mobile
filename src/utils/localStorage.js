@@ -1,7 +1,7 @@
 export const setItem = (key, item) => {
-  if (item instanceof Object) {
-    item = JSON.stringify(item)
-  }
+  // if (item instanceof Object) {
+  //   item = JSON.stringify(item)
+  // }
   window.localStorage.setItem(key, JSON.stringify(item))
 }
 export const getItem = (key) => {
