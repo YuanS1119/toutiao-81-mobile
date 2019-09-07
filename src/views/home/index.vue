@@ -5,7 +5,7 @@
     <van-tabs animated v-model="activeIndex">
       <van-tab v-for="channel in channelsList" :key="channel.id" :title="channel.name">
         <!-- 下拉更新 -->
-        <van-pull-refresh v-model="currentChannel.pullLoading" @refresh="onRefresh">
+        <van-pull-refresh v-model="currentChannel.pullLoading" @refresh="onRefresh" :success-text="successText">
           <!-- 对应的频道的文章列表获取 -->
           <van-list
             v-model="currentChannel.loading"
@@ -33,7 +33,9 @@ export default {
     return {
       // 频道数据
       channelsList: [], // 获取频道列表
-      activeIndex: 0 // 获取当前频道索引
+      activeIndex: 0, // 获取当前频道索引
+      // 下拉更新成功提示文字
+      successText: ''
     }
   },
   computed: {
@@ -81,12 +83,19 @@ export default {
         console.log(error)
       }
     },
-    // 下拉更新
-    onRefresh () {
-      setTimeout(() => {
-        this.$toast('刷新成功')
-        this.currentChannel.pullLoading = false
-      }, 500)
+    // 下拉更新加载更多
+    async onRefresh () {
+      let res = await getArticles(
+        {
+          channelId: this.currentChannel.id,
+          timestamp: Date.now(),
+          withTop: 1
+        }
+      )
+      this.currentChannel.pullLoading = false
+      // 把当前数据放到最前面
+      this.currentChannel.articles.unshift(...res.results)
+      this.successText = `当前加载了${res.results.length}条数据`
     }
   },
   created () {
