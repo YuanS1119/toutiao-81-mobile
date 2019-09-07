@@ -50,6 +50,8 @@
         </van-pull-refresh>
       </van-tab>
     </van-tabs>
+    <!-- 弹出层 -->
+    <moreAction></moreAction>
   </div>
 </template>
 
@@ -59,11 +61,16 @@ import { getArticles } from '@/api/articles'
 // 图片懒加载全局可用
 import Vue from 'vue'
 import { Lazyload } from 'vant'
-
+// 弹出层
+import moreAction from '@/components/tipSwinDown'
 // options 为可选参数，无则不传
 Vue.use(Lazyload)
 
 export default {
+  name: 'home',
+  components: {
+    moreAction
+  },
   data () {
     return {
       // 频道数据
