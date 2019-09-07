@@ -26,11 +26,16 @@
               <div slot="label">
                 <!-- type封面类型，0-无封面，1-1张封面图片，3-3张封面 -->
                 <van-grid :column-num="3" v-if="article.cover.type" :border="false">
-                  <van-grid-item
-                    v-for="(img,index) in article.cover.images"
-                    :key="img + index"
-                  >
-                  <van-image height="80" :src=img />
+                  <van-grid-item v-for="(img,index) in article.cover.images" :key="img + index">
+                    <van-image height="80" :src="img"  lazy-load>
+                      <!-- lazy-load图片懒加载 -->
+                      <!-- 图片加载提示 -->
+                      <template v-slot:loading>
+                        <van-loading type="spinner" size="20" />
+                      </template>
+                      <!-- 加载失败提示 -->
+                       <template v-slot:error>加载失败</template>
+                    </van-image>
                   </van-grid-item>
                 </van-grid>
                 <p>
@@ -51,6 +56,13 @@
 <script>
 import { getdefaultOrUserChannel } from '@/api/channels'
 import { getArticles } from '@/api/articles'
+// 图片懒加载全局可用
+import Vue from 'vue'
+import { Lazyload } from 'vant'
+
+// options 为可选参数，无则不传
+Vue.use(Lazyload)
+
 export default {
   data () {
     return {
