@@ -5,7 +5,11 @@
     <van-tabs animated v-model="activeIndex">
       <van-tab v-for="channel in channelsList" :key="channel.id" :title="channel.name">
         <!-- 下拉更新 -->
-        <van-pull-refresh v-model="currentChannel.pullLoading" @refresh="onRefresh" :success-text="successText">
+        <van-pull-refresh
+          v-model="currentChannel.pullLoading"
+          @refresh="onRefresh"
+          :success-text="successText"
+        >
           <!-- 对应的频道的文章列表获取 -->
           <van-list
             v-model="currentChannel.loading"
@@ -17,7 +21,26 @@
               v-for="article in currentChannel.articles"
               :key="article.art_id.toString()"
               :title="article.title"
-            />
+            >
+              <!-- 插入图片（使用cell中的插槽） -->
+              <div slot="label">
+                <!-- type封面类型，0-无封面，1-1张封面图片，3-3张封面 -->
+                <van-grid :column-num="3" v-if="article.cover.type" :border="false">
+                  <van-grid-item
+                    v-for="(img,index) in article.cover.images"
+                    :key="img + index"
+                  >
+                  <van-image height="80" :src=img />
+                  </van-grid-item>
+                </van-grid>
+                <p>
+                  <span>{{article.aut_name}}</span>&nbsp;
+                  <span>{{article.comm_count}}</span>&nbsp;
+                  <span>{{article.pubdate}}</span>
+                  <van-icon name="close" class="close" />
+                </p>
+              </div>
+            </van-cell>
           </van-list>
         </van-pull-refresh>
       </van-tab>
@@ -73,6 +96,7 @@ export default {
         })
         this.currentChannel.timestamp = res.pre_timestamp
         this.currentChannel.articles = res.results
+        console.log(res.results)
         this.currentChannel.articles.push(...res.results)
         this.currentChannel.loading = false
         // 如果一个频道加载完毕，其它频道中的finished也是加载完毕
@@ -85,13 +109,11 @@ export default {
     },
     // 下拉更新加载更多
     async onRefresh () {
-      let res = await getArticles(
-        {
-          channelId: this.currentChannel.id,
-          timestamp: Date.now(),
-          withTop: 1
-        }
-      )
+      let res = await getArticles({
+        channelId: this.currentChannel.id,
+        timestamp: Date.now(),
+        withTop: 1
+      })
       this.currentChannel.pullLoading = false
       // 把当前数据放到最前面
       this.currentChannel.articles.unshift(...res.results)
@@ -116,6 +138,9 @@ export default {
   /deep/ .van-tabs__content {
     margin-top: 90px;
     margin-bottom: 50px;
+  }
+  .close {
+    float: right;
   }
 }
 </style>
