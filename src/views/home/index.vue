@@ -4,13 +4,26 @@
     <van-nav-bar title="黑马头条" fixed />
     <van-tabs animated v-model="activeIndex">
       <van-tab v-for="channel in channelsList" :key="channel.id" :title="channel.name">
-        <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
-          <van-cell v-for="article in currentChannel.articles" :key="article.art_id.toString()" :title="article.title" />
-        </van-list>
+        <!-- 下拉更新 -->
+        <van-pull-refresh v-model="currentChannel.pullLoading" @refresh="onRefresh">
+          <!-- 对应的频道的文章列表获取 -->
+          <van-list
+            v-model="currentChannel.loading"
+            :finished="currentChannel.finished"
+            finished-text="没有更多了"
+            @load="onLoad"
+          >
+            <van-cell
+              v-for="article in currentChannel.articles"
+              :key="article.art_id.toString()"
+              :title="article.title"
+            />
+          </van-list>
+        </van-pull-refresh>
       </van-tab>
     </van-tabs>
   </div>
-</template>s
+</template>
 
 <script>
 import { getdefaultOrUserChannel } from '@/api/channels'
@@ -20,11 +33,7 @@ export default {
     return {
       // 频道数据
       channelsList: [], // 获取频道列表
-      activeIndex: 0, // 获取当前频道索引
-      // 文章标题列表
-      artTitleList: [],
-      loading: false,
-      finished: false
+      activeIndex: 0 // 获取当前频道索引
     }
   },
   computed: {
@@ -38,9 +47,14 @@ export default {
     async getChannel () {
       try {
         let res = await getdefaultOrUserChannel()
-        res.channels.forEach((channel) => {
+        res.channels.forEach(channel => {
           channel.timestamp = null
           channel.articles = []
+          // 上拉更新
+          channel.finished = false
+          channel.loading = false
+          // 下拉更新
+          channel.pullLoading = false
         })
         this.channelsList = res.channels
       } catch (error) {
@@ -50,20 +64,29 @@ export default {
     // 获取文章标题列表
     async onLoad () {
       try {
-        let res = await getArticles(
-          {
-            channelId: this.currentChannel.id,
-            timestamp: this.currentChannel.timestamp || Date.now(),
-            withTop: 1
-          }
-        )
+        let res = await getArticles({
+          channelId: this.currentChannel.id,
+          timestamp: this.currentChannel.timestamp || Date.now(),
+          withTop: 1
+        })
         this.currentChannel.timestamp = res.pre_timestamp
         this.currentChannel.articles = res.results
         this.currentChannel.articles.push(...res.results)
-        this.loading = false
+        this.currentChannel.loading = false
+        // 如果一个频道加载完毕，其它频道中的finished也是加载完毕
+        if (res.results.length === 0) {
+          this.currentChannel.finished = true
+        }
       } catch (error) {
         console.log(error)
       }
+    },
+    // 下拉更新
+    onRefresh () {
+      setTimeout(() => {
+        this.$toast('刷新成功')
+        this.currentChannel.pullLoading = false
+      }, 500)
     }
   },
   created () {

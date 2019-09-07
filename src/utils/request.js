@@ -2,7 +2,7 @@ import axios from 'axios'
 import JSONbig from 'json-bigint'
 import store from '@/store.js'
 const instance = axios.create({
-  timeout: 8000,
+  // timeout: 8000,
   baseURL: 'http://ttapi.research.itcast.cn'
 })
 // 请求拦截器
