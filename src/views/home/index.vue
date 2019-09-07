@@ -41,7 +41,7 @@
                 <p>
                   <span>{{article.aut_name}}</span>&nbsp;
                   <span>{{article.comm_count}}</span>&nbsp;
-                  <span>{{article.pubdate}}</span>
+                  <span>{{article.pubdate | fmtDate}}</span>
                   <van-icon name="close" class="close" />
                 </p>
               </div>
@@ -108,7 +108,6 @@ export default {
         })
         this.currentChannel.timestamp = res.pre_timestamp
         this.currentChannel.articles = res.results
-        console.log(res.results)
         this.currentChannel.articles.push(...res.results)
         this.currentChannel.loading = false
         // 如果一个频道加载完毕，其它频道中的finished也是加载完毕
