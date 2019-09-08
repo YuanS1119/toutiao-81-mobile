@@ -1,5 +1,5 @@
 <template>
-  <van-dialog v-model="show" :showConfirmButton="false" closeOnClickOverlay >
+  <van-dialog :value="value" @input="$emit('input',$event)" :showConfirmButton="false" closeOnClickOverlay >
     <!-- 弹框提示信息 -->
     <van-cell-group v-show="!showReport">
       <van-cell icon="location-o" title="不感兴趣" />
@@ -24,9 +24,15 @@
 
 <script>
 export default {
+  name: 'tipSwinDown',
+  props: {
+    value: {
+      type: Boolean,
+      required: true
+    }
+  },
   data () {
     return {
-      show: true,
       showReport: false
     }
   }
