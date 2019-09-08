@@ -52,7 +52,7 @@
     </van-tabs>
     <!-- 弹出层 -->
     <!-- v-model等价于v-bind：value="showMoreAction" 和v-on="showMoreAction = $event" -->
-    <moreAction v-model="showMoreAction" v-if="currentArticle" :article="currentArticle"></moreAction>
+    <moreAction v-model="showMoreAction" v-if="currentArticle" :article="currentArticle" @handleSuccess="handleSuccess"></moreAction>
   </div>
 </template>
 
@@ -91,6 +91,17 @@ export default {
     }
   },
   methods: {
+    // 不感兴趣操作成功子组件向父组件抛一个事件
+    handleSuccess () {
+      this.showMoreAction = false
+      const articles = this.currentChannel.articles
+      // findindex查找符合条件的数据并返回其索引值
+      const index = articles.findIndex((article) => {
+        return article.art_id === this.currentArticle.art_id
+      })
+      // 删除数据
+      articles.splice(index, 1)
+    },
     // 点击事件：记录当前数据
     handleArticle (article) {
       this.showMoreAction = true
