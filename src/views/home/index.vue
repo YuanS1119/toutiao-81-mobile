@@ -42,7 +42,7 @@
                   <span>{{article.aut_name}}</span>&nbsp;
                   <span>{{article.comm_count}}</span>&nbsp;
                   <span>{{article.pubdate | fmtDate}}</span>
-                  <van-icon name="close" class="close" @click="showMoreAction = true"/>{{showMoreAction}}
+                  <van-icon name="close" class="close" @click="handleArticle(article)"/>
                 </p>
               </div>
             </van-cell>
@@ -52,7 +52,7 @@
     </van-tabs>
     <!-- 弹出层 -->
     <!-- v-model等价于v-bind：value="showMoreAction" 和v-on="showMoreAction = $event" -->
-    <moreAction v-model="showMoreAction"></moreAction>
+    <moreAction v-model="showMoreAction" v-if="currentArticle" :article="currentArticle"></moreAction>
   </div>
 </template>
 
@@ -80,7 +80,8 @@ export default {
       // 下拉更新成功提示文字
       successText: '',
       // 控制弹层显隐
-      showMoreAction: false
+      showMoreAction: false,
+      currentArticle: null // 点击×时，记录当前对象
     }
   },
   computed: {
@@ -90,6 +91,11 @@ export default {
     }
   },
   methods: {
+    // 点击事件：记录当前数据
+    handleArticle (article) {
+      this.showMoreAction = true
+      this.currentArticle = article
+    },
     // 获取频道列表
     async getChannel () {
       try {
