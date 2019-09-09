@@ -3,6 +3,8 @@
     <router-view></router-view>
     <van-nav-bar title="黑马头条" fixed />
     <van-tabs animated v-model="activeIndex">
+      <!-- 频道菜单图标 -->
+      <van-icon slot="nav-right" name="wap-nav" class="nav-btn" @click="showMenuChannel=true" />
       <van-tab v-for="channel in channelsList" :key="channel.id" :title="channel.name">
         <!-- 下拉更新 -->
         <van-pull-refresh
@@ -27,14 +29,14 @@
                 <!-- type封面类型，0-无封面，1-1张封面图片，3-3张封面 -->
                 <van-grid :column-num="3" v-if="article.cover.type" :border="false">
                   <van-grid-item v-for="(img,index) in article.cover.images" :key="img + index">
-                    <van-image height="80" :src="img"  lazy-load>
+                    <van-image height="80" :src="img" lazy-load>
                       <!-- lazy-load图片懒加载 -->
                       <!-- 图片加载提示 -->
                       <template v-slot:loading>
                         <van-loading type="spinner" size="20" />
                       </template>
                       <!-- 加载失败提示 -->
-                       <template v-slot:error>加载失败</template>
+                      <template v-slot:error>加载失败</template>
                     </van-image>
                   </van-grid-item>
                 </van-grid>
@@ -42,7 +44,7 @@
                   <span>{{article.aut_name}}</span>&nbsp;
                   <span>{{article.comm_count}}</span>&nbsp;
                   <span>{{article.pubdate | fmtDate}}</span>
-                  <van-icon name="close" class="close" @click="handleArticle(article)"/>
+                  <van-icon name="close" class="close" @click="handleArticle(article)" />
                 </p>
               </div>
             </van-cell>
@@ -52,9 +54,14 @@
     </van-tabs>
     <!-- 弹出层 -->
     <!-- v-model等价于v-bind：value="showMoreAction" 和v-on="showMoreAction = $event" -->
-    <moreAction v-model="showMoreAction" v-if="currentArticle" :article="currentArticle" @handleSuccess="handleSuccess"></moreAction>
+    <moreAction
+      v-model="showMoreAction"
+      v-if="currentArticle"
+      :article="currentArticle"
+      @handleSuccess="handleSuccess"
+    ></moreAction>
     <!-- 菜单频道弹出层 -->
-    <menu-channel></menu-channel>
+    <menu-channel v-model="showMenuChannel"></menu-channel>
   </div>
 </template>
 
@@ -88,7 +95,9 @@ export default {
       successText: '',
       // 控制弹层显隐
       showMoreAction: false,
-      currentArticle: null // 点击×时，记录当前对象
+      currentArticle: null, // 点击×时，记录当前对象
+      // 是否显示菜单频道
+      showMenuChannel: false
     }
   },
   computed: {
@@ -103,7 +112,7 @@ export default {
       this.showMoreAction = false
       const articles = this.currentChannel.articles
       // findindex查找符合条件的数据并返回其索引值
-      const index = articles.findIndex((article) => {
+      const index = articles.findIndex(article => {
         return article.art_id === this.currentArticle.art_id
       })
       // 删除数据
@@ -196,6 +205,14 @@ export default {
   }
   .close {
     float: right;
+  }
+  .nav-btn {
+    position: fixed;
+    right: 10px;
+    line-height: 44px;
+    background-color: #fff;
+    opacity: 0.8;
+    font-size: 22px;
   }
 }
 </style>
