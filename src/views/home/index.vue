@@ -57,6 +57,8 @@
 </template>
 
 <script>
+// 首页频道列表改造
+import { getItem, setItem } from '@/utils/localStorage'
 import { getdefaultOrUserChannel } from '@/api/channels'
 import { getArticles } from '@/api/articles'
 // 图片懒加载全局可用
@@ -110,8 +112,19 @@ export default {
     // 获取频道列表
     async getChannel () {
       try {
-        let res = await getdefaultOrUserChannel()
-        res.channels.forEach(channel => {
+        let channels = []
+        if (this.$store.user) {
+          let res = await getdefaultOrUserChannel()
+          channels = res.channels
+        } else {
+          channels = getItem('channels')
+          if (!channels) {
+            let res = await getdefaultOrUserChannel()
+            channels = res.channels
+            setItem('channels', channels)
+          }
+        }
+        channels.forEach(channel => {
           channel.timestamp = null
           channel.articles = []
           // 上拉更新
@@ -120,9 +133,9 @@ export default {
           // 下拉更新
           channel.pullLoading = false
         })
-        this.channelsList = res.channels
+        this.channelsList = channels
       } catch (error) {
-        console.log(error)
+        console.dir(error)
       }
     },
     // 获取文章标题列表
