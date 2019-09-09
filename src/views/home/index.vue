@@ -134,7 +134,6 @@ export default {
           withTop: 1
         })
         this.currentChannel.timestamp = res.pre_timestamp
-        this.currentChannel.articles = res.results
         this.currentChannel.articles.push(...res.results)
         this.currentChannel.loading = false
         // 如果一个频道加载完毕，其它频道中的finished也是加载完毕

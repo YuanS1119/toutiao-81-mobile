@@ -10,7 +10,6 @@ export default new Vuex.Store({
   },
   mutations: {
     setUser (state, user) {
-      // console.log(state, user, 'store打印')
       state.user = user
       storageTools.setItem('user', user)
     }

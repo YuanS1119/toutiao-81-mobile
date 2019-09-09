@@ -12,3 +12,9 @@ export const login = ({
     mobile, code
   })
 }
+// 拉黑用户
+export const blackUser = (id) => {
+  return request.post('/app/v1_0/user/blacklists', {
+    target: id
+  })
+}
