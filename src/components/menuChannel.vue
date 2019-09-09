@@ -7,12 +7,13 @@
   >
     <van-cell icon="cross" />
     <van-cell title="我的频道">
-      <van-button round plain type="danger" class="edit">编辑</van-button>
+      <van-button round plain type="danger" class="edit" v-show="!isEdit" @click="isEdit=true">编辑</van-button>
+      <van-button round plain type="danger" class="edit" v-show="isEdit" @click="isEdit=false">完成</van-button>
     </van-cell>
     <van-cell class="myChannel">
         <van-grid :border="false">
             <van-grid-item v-for="value in 8" :key="value">
-                <van-icon slot="icon" name="close" class="icon" />
+                <van-icon slot="icon" name="close" class="icon" v-show="isEdit" />
             </van-grid-item>
        </van-grid>
     </van-cell>
@@ -35,7 +36,8 @@ export default {
   },
   data () {
     return {
-      show: true
+      // 是否进入编辑模式
+      isEdit: false
     }
   }
 }
