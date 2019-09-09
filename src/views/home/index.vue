@@ -53,6 +53,8 @@
     <!-- 弹出层 -->
     <!-- v-model等价于v-bind：value="showMoreAction" 和v-on="showMoreAction = $event" -->
     <moreAction v-model="showMoreAction" v-if="currentArticle" :article="currentArticle" @handleSuccess="handleSuccess"></moreAction>
+    <!-- 菜单频道弹出层 -->
+    <menu-channel></menu-channel>
   </div>
 </template>
 
@@ -66,13 +68,16 @@ import Vue from 'vue'
 import { Lazyload } from 'vant'
 // 弹出层
 import moreAction from '@/components/tipSwinDown'
+// 菜单频道
+import menuChannel from '@/components/menuChannel'
 // options 为可选参数，无则不传
 Vue.use(Lazyload)
 
 export default {
   name: 'home',
   components: {
-    moreAction
+    moreAction,
+    menuChannel
   },
   data () {
     return {
