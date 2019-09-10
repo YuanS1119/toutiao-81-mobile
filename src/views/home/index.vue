@@ -138,12 +138,12 @@ export default {
         } else {
           channels = getItem('channels')
           if (!channels) {
-            // alert(1)
             let res = await getdefaultOrUserChannel()
             channels = res.channels
             setItem('channels', channels)
           }
         }
+
         channels.forEach(channel => {
           channel.timestamp = null
           channel.articles = []

@@ -23,14 +23,14 @@
     <van-cell class="channelRecommend">
         <!-- <van-tag class="tagnew" v-for="reChannel in recommendChannels" :key="reChannel.id" :text="reChannel.name" /> -->
         <van-grid>
-            <van-grid-item v-for="reChannel in recommendChannels" :key="reChannel.id" :text="reChannel.name"  />
+            <van-grid-item v-for="reChannel in recommendChannels" :key="reChannel.id" :text="reChannel.name" @click="handleRemChannel(reChannel)" />
         </van-grid>
     </van-cell>
   </van-popup>
 </template>
 
 <script>
-import { getdefaultOrUserChannel, delUserChannel } from '@/api/channels'
+import { getdefaultOrUserChannel, delUserChannel, addChannels } from '@/api/channels'
 import { mapState } from 'vuex'
 import { setItem } from '@/utils/localStorage'
 export default {
@@ -68,6 +68,26 @@ export default {
     }
   },
   methods: {
+    // 频道菜单推荐频道操作
+    async handleRemChannel (reChannel) {
+      this.channelsList.push(reChannel)
+      if (this.user) {
+        try {
+          let channelsA = {
+            id: reChannel.id,
+            seq: this.channelsList.length
+          }
+          console.log(this.channelsList)
+          console.log(channelsA)
+          await addChannels(channelsA)
+        } catch (error) {
+          this.$toast.fail('操作失败')
+        }
+        return
+      }
+      setItem('channels', this.channelsList)
+    },
+    // 获取全部频道列表
     async getAllChannels () {
       try {
         let res = await getdefaultOrUserChannel()
@@ -76,6 +96,7 @@ export default {
         console.log(error)
       }
     },
+    // 频道菜单弹层操作
     async handleChannelActive (index, channelId) {
       // alert(index)
       // 非编辑模式
@@ -84,6 +105,10 @@ export default {
         return
       }
       // 编辑模式
+      // 推荐不能删除
+      if (this.channelsList[index].name === '推荐') {
+        return
+      }
       this.channelsList.splice(index, 1)
       // 用户登录
       if (this.user) {
