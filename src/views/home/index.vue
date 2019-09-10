@@ -189,12 +189,10 @@ export default {
       // 把当前数据放到最前面
       this.currentChannel.articles.unshift(...res.results)
       this.successText = `当前加载了${res.results.length}条数据`
-      console.log(this.currentChannel.articles)
     }
   },
   created () {
     this.getChannel()
-    // console.log(this.$set)
   }
 }
 </script>
