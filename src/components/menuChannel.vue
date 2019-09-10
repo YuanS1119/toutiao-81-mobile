@@ -21,7 +21,6 @@
     </van-cell>
     <van-cell title="频道推荐" />
     <van-cell class="channelRecommend">
-        <!-- <van-tag class="tagnew" v-for="reChannel in recommendChannels" :key="reChannel.id" :text="reChannel.name" /> -->
         <van-grid>
             <van-grid-item v-for="reChannel in recommendChannels" :key="reChannel.id" :text="reChannel.name" @click="handleRemChannel(reChannel)" />
         </van-grid>
@@ -70,6 +69,12 @@ export default {
   methods: {
     // 频道菜单推荐频道操作
     async handleRemChannel (reChannel) {
+      // set (target, key, val)
+      this.$set(reChannel, 'timestamp', null)
+      this.$set(reChannel, 'articles', [])
+      this.$set(reChannel, 'finished', false)
+      this.$set(reChannel, 'loading', false)
+      this.$set(reChannel, 'pullLoading', false)
       this.channelsList.push(reChannel)
       if (this.user) {
         try {
@@ -77,8 +82,6 @@ export default {
             id: reChannel.id,
             seq: this.channelsList.length
           }
-          console.log(this.channelsList)
-          console.log(channelsA)
           await addChannels(channelsA)
         } catch (error) {
           this.$toast.fail('操作失败')
@@ -93,7 +96,6 @@ export default {
         let res = await getdefaultOrUserChannel()
         this.allChannels = res.channels
       } catch (error) {
-        console.log(error)
       }
     },
     // 频道菜单弹层操作
@@ -141,13 +143,4 @@ export default {
 .active{
 color: red;
 }
-// .tagnew{
-//     height: 67px;
-//     width: 45px;
-// }
-// .van-grid-item__content{
-//     background-color: #ccc;
-//     padding: 2px;
-//     box-sizing: border-box;
-// }
 </style>
