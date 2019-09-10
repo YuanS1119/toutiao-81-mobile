@@ -12,7 +12,9 @@
     />
     <!-- 搜索提示 -->
     <van-cell-group v-show="value">
-      <van-cell v-for="suggest in suggestList" :key="suggest" :title="suggest" icon="search" @click="onSearch(suggest)"/>
+      <van-cell v-for="suggest in suggestList" :key="suggest" icon="search" @click="onSearch(suggest)">
+      <div slot="title" v-html="heightLight(suggest)" ></div>
+      </van-cell>
     </van-cell-group>
 
     <!-- 历史记录 -->
@@ -58,12 +60,15 @@ export default {
   },
   methods: {
     onSearch (suggest) {
+      // alert(1)
+      // console.log(this.value)
       // 判断histories中是否存在suggest
       if (this.histories.includes(suggest)) {
         return
       }
       //   如果没有则把suggest存到histories
       this.histories.push(suggest)
+      console.log(suggest)
       //   判断用户是否登录
       if (this.user) {
         return
@@ -72,6 +77,7 @@ export default {
       storageTools.setItem('histories', this.histories)
     },
     onCancel () {},
+    // 保存输入建议
     async saveSuggest () {
       if (this.value.lenght === 0) {
         return
@@ -80,6 +86,7 @@ export default {
         let params = { q: this.value }
         let res = await getSuggestSearch(params)
         this.suggestList = res.options
+        // console.log(this.suggestList)
       } catch (error) {
         console.log(error)
       }
@@ -88,6 +95,11 @@ export default {
     delHistory (index) {
       this.histories.splice(index, 1)
       storageTools.setItem('histories', this.histories)
+    },
+    // 搜索提示字高亮显示
+    heightLight (suggest) {
+      let reg = new RegExp(this.value, 'g')
+      return suggest.replace(reg, `<span style="color:red;">${this.value}</span>`)
     }
   },
   created () {
