@@ -2,6 +2,16 @@
   <div>
     <router-view></router-view>
     <van-nav-bar title="黑马头条" fixed />
+     <!-- <van-search
+      v-model="value"
+      placeholder="请输入搜索关键词"
+      show-action
+      @search="onSearch"
+      @cancel="onCancel"
+      @input="saveSuggest"
+      clearable
+      background="#3e9df8"
+    /> -->
     <van-tabs animated v-model="activeIndex">
       <!-- 频道菜单图标 -->
       <van-icon slot="nav-right" name="wap-nav" class="nav-btn" @click="showMenuChannel=true" />
@@ -198,6 +208,13 @@ export default {
 </script>
 
 <style lang='less' scoped>
+// .index-search .van-search{
+// //  position: fixed;
+// //     top: 46px;
+// //     left: 0;
+// //     right: 10px;
+//     // z-index: 100;
+// }
 .van-tabs {
   /deep/ .van-tabs__wrap {
     position: fixed;
@@ -207,7 +224,7 @@ export default {
     z-index: 100;
   }
   /deep/ .van-tabs__content {
-    margin-top: 90px;
+    margin-top: 100px;
     margin-bottom: 50px;
   }
   .close {
