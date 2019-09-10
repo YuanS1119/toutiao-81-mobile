@@ -61,7 +61,7 @@
       @handleSuccess="handleSuccess"
     ></moreAction>
     <!-- 菜单频道弹出层 -->
-    <menu-channel v-model="showMenuChannel"></menu-channel>
+    <menu-channel v-model="showMenuChannel" :channelsList="channelsList" :activeIndex="activeIndex" @changeChannel="changeChannel"></menu-channel>
   </div>
 </template>
 
@@ -107,6 +107,11 @@ export default {
     }
   },
   methods: {
+    // 菜单频道点击或向内添加频道时确保菜单内与频道列表同步点亮同一个
+    changeChannel (index) {
+      this.activeIndex = index
+      this.showMenuChannel = false
+    },
     // 不感兴趣操作成功子组件向父组件抛一个事件
     handleSuccess () {
       this.showMoreAction = false
@@ -133,6 +138,7 @@ export default {
         } else {
           channels = getItem('channels')
           if (!channels) {
+            // alert(1)
             let res = await getdefaultOrUserChannel()
             channels = res.channels
             setItem('channels', channels)
@@ -155,6 +161,7 @@ export default {
     // 获取文章标题列表
     async onLoad () {
       try {
+        // alert(1)
         let res = await getArticles({
           channelId: this.currentChannel.id,
           timestamp: this.currentChannel.timestamp || Date.now(),
