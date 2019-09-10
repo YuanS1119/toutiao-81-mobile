@@ -6,3 +6,7 @@ import request from '@/utils/request'
 export const getdefaultOrUserChannel = () => {
   return request.get('/app/v1_0/user/channels')
 }
+// 删除指定用户频道
+export const delUserChannel = (id) => {
+  return request.delete(`/app/v1_0/user/channels/${id}`)
+}

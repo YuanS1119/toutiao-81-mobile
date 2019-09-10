@@ -12,9 +12,10 @@
     </van-cell>
     <van-cell class="myChannel">
         <van-grid >
-            <van-grid-item v-for="(channel,index) in channelsList" :key="channel.id" @click="handleChannelActive(index)">
+            <van-grid-item v-for="(channel,index) in channelsList" :key="channel.id" @click="handleChannelActive(index,channel.id)">
                 <div slot="text" :class="{active: activeIndex === index}" >{{channel.name}}</div>
-                <van-icon slot="icon" name="close" class="icon" v-show="isEdit" />
+                <van-icon slot="icon" name="close" class="icon" v-show="isEdit && index !== 0" />
+                <!-- 为什么有v-show="isEdit && index !== 0" -->
             </van-grid-item>
        </van-grid>
     </van-cell>
@@ -29,7 +30,9 @@
 </template>
 
 <script>
-import { getdefaultOrUserChannel } from '@/api/channels'
+import { getdefaultOrUserChannel, delUserChannel } from '@/api/channels'
+import { mapState } from 'vuex'
+import { setItem } from '@/utils/localStorage'
 export default {
   props: {
     value: {
@@ -54,6 +57,7 @@ export default {
     }
   },
   computed: {
+    ...mapState(['user']),
     recommendChannels () {
       const ids = this.channelsList.map((channel) => {
         return channel.id
@@ -72,12 +76,25 @@ export default {
         console.log(error)
       }
     },
-    handleChannelActive (index) {
+    async handleChannelActive (index, channelId) {
+      // alert(index)
+      // 非编辑模式
       if (!this.isEdit) {
         this.$emit('changeChannel', index)
         return
       }
-      console.log(this.isEdit)
+      // 编辑模式
+      this.channelsList.splice(index, 1)
+      // 用户登录
+      if (this.user) {
+        try {
+          await delUserChannel(channelId)
+        } catch (error) {
+          this.$toast.fail('操作失败')
+        }
+      }
+      // 用户未登录，讲频道存到本地
+      setItem('channels', this.channelsList)
     }
   },
   created () {
