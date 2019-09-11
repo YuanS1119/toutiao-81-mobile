@@ -27,7 +27,7 @@
         </div>
           <van-icon name="delete" size="18px" v-show="!isDel" @click="isDel=true"/>
       </van-cell>
-      <van-cell v-for="(item,index) in histories" :key="item" :title="item">
+      <van-cell v-for="(item,index) in histories" :key="item" :title="item" @click="onSearch(item)">
         <!-- 自定义右侧内容 -->
         <van-icon v-show="isDel" name="close" size="18px" @click="delHistory(index)" />
       </van-cell>
@@ -60,8 +60,15 @@ export default {
   },
   methods: {
     onSearch (suggest) {
-      // alert(1)
-      // console.log(this.value)
+      // 路由跳转
+      this.$router.push({
+        // 路由的名字
+        name: 'search-result',
+        // 携带的关键字参数
+        params: {
+          q: suggest
+        }
+      })
       // 判断histories中是否存在suggest
       if (this.histories.includes(suggest)) {
         return
