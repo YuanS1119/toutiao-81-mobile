@@ -75,7 +75,6 @@ export default {
       }
       //   如果没有则把suggest存到histories
       this.histories.push(suggest)
-      console.log(suggest)
       //   判断用户是否登录
       if (this.user) {
         return
